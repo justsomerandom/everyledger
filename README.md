@@ -2,7 +2,7 @@
 
 EveryLedger is planned as a generic embeddable and integratable double-entry ledger service for tracking arbitrary user-defined assets or units, such as fiat currencies, loyalty points, game currencies, compute credits, inventory units, tokens, or domain-specific units.
 
-This repository currently contains only the initial project foundation. Ledger behavior has not been implemented yet.
+This repository contains a Java 21 Spring Boot foundation, an immutable domain model, and plain Java application services for registering assets, creating accounts, posting transactions, reading account entries, and deriving balances. Persistence adapters and HTTP APIs are not implemented yet.
 
 ## Goals
 
@@ -47,10 +47,10 @@ flowchart LR
 
 ## Repository Structure
 
-- `src/main/java/com/everyledger/account` - planned account domain behavior.
-- `src/main/java/com/everyledger/asset` - planned asset-type definitions and constraints.
-- `src/main/java/com/everyledger/ledger` - planned ledger entry model and recording logic.
-- `src/main/java/com/everyledger/transaction` - planned transaction orchestration and validation.
+- `src/main/java/com/everyledger/account` - account model; `application` contains creation, history, balance, and the account port.
+- `src/main/java/com/everyledger/asset` - asset-type model; `application` contains registration and the asset port.
+- `src/main/java/com/everyledger/ledger` - immutable entries and entry directions.
+- `src/main/java/com/everyledger/transaction` - transaction invariants; `application` contains posting and the transaction port.
 - `src/main/java/com/everyledger/exchange` - planned cross-asset exchange recording.
 - `src/main/java/com/everyledger/reconciliation` - planned reconciliation workflows.
 - `src/main/java/com/everyledger/event` - planned domain event publishing boundaries.
@@ -73,16 +73,17 @@ flowchart LR
 - OpenAPI - planned API documentation.
 - Kafka - planned later only if domain events justify it.
 
-Only the Maven project skeleton and directory structure are currently present.
+Application services use constructor-injected repository ports. In-memory implementations exist only in tests. See [Architecture](docs/architecture.md) and [Ledger Model](docs/ledger-model.md) for current contracts and semantics.
 
 ## Development
 
-Setup instructions will be expanded as implementation begins. No Spring application code, generated dependencies, or framework boilerplate has been added.
+Set `JAVA_HOME` to a Java 21 JDK and run `mvn test`. Run the minimal Boot application with `mvn spring-boot:run`; application services are not yet wired into Spring.
 
 ## Roadmap
 
-- [ ] Define asset, account, transaction, and ledger entry domain model.
-- [ ] Establish double-entry validation rules.
+- [x] Define asset, account, transaction, and ledger entry domain model.
+- [x] Establish double-entry validation rules.
+- [x] Add application use cases and persistence ports.
 - [ ] Add persistence migrations for immutable entries.
 - [ ] Add idempotency-key handling.
 - [ ] Add balance projections and snapshot strategy.

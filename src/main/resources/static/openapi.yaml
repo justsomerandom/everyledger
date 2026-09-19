@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info: {title: EveryLedger API, version: v1, description: "Immutable double-entry ledger. POST /transactions requires Idempotency-Key; identical repeats return the original transaction, conflicting reuse returns 409."}
+paths:
+  /api/v1/asset-types: {get: {summary: List asset types}, post: {summary: Create asset type}}
+  /api/v1/accounts: {get: {summary: List accounts}, post: {summary: Create account}}
+  /api/v1/transactions: {get: {summary: Transaction history}, post: {summary: Post balanced transaction, parameters: [{name: Idempotency-Key, in: header, required: true}]}}
+  /api/v1/transactions/{id}: {get: {summary: Transaction lookup}}
+  /api/v1/accounts/{id}/balance: {get: {summary: Derived current balance}}
+  /api/v1/accounts/{id}/entries: {get: {summary: Immutable entry history}}

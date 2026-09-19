@@ -14,6 +14,12 @@ Posting accepts a list of existing domain `LedgerEntry` values to avoid introduc
 
 History preserves repeated entries and orders them by transaction timestamp, canonical UUID string, then position within the transaction. Empty history is valid for an existing account. Missing accounts/assets produce explicit application exceptions. There is no pagination or stored balance.
 
+## PostgreSQL Persistence
+
+JDBC adapters implement the existing repository ports. Flyway creates asset, account, transaction, entry, and idempotency-key tables. A Spring transaction surrounds the idempotency claim, transaction insert, entry inserts, and claim completion. The idempotency key is unique at database level and a conflicting payload is rejected.
+
+Ledger transaction and entry update/delete triggers prohibit mutation. Account balances remain a derived query over immutable entry history. HTTP DTOs remain at the API boundary, with the generated static OpenAPI document available at `/openapi.yaml` and health at `/actuator/health`.
+
 ## Future Persistence
 
 PostgreSQL/JPA adapters must map immutable domain records, preserve entry position and duplicates, enforce references, and commit each transaction plus all its entries atomically. Database transaction boundaries and concurrency protection remain adapter/wiring work. History queries must provide a consistent snapshot of committed entries and honor the port's specified ordering.

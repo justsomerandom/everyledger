@@ -2,7 +2,7 @@
 
 EveryLedger is planned as a generic embeddable and integratable double-entry ledger service for tracking arbitrary user-defined assets or units, such as fiat currencies, loyalty points, game currencies, compute credits, inventory units, tokens, or domain-specific units.
 
-This repository contains a Java 21 Spring Boot foundation, an immutable domain model, and plain Java application services for registering assets, creating accounts, posting transactions, reading account entries, and deriving balances. Persistence adapters and HTTP APIs are not implemented yet.
+This repository contains a durable PostgreSQL-backed ledger backend. Immutable entries are the source of truth; balances are calculated from entry history.
 
 ## Goals
 
@@ -84,11 +84,11 @@ Set `JAVA_HOME` to a Java 21 JDK and run `mvn test`. Run the minimal Boot applic
 - [x] Define asset, account, transaction, and ledger entry domain model.
 - [x] Establish double-entry validation rules.
 - [x] Add application use cases and persistence ports.
-- [ ] Add persistence migrations for immutable entries.
-- [ ] Add idempotency-key handling.
+- [x] Add persistence migrations for immutable entries.
+- [x] Add idempotency-key handling.
 - [ ] Add balance projections and snapshot strategy.
 - [ ] Add reconciliation workflows.
-- [ ] Add HTTP API and OpenAPI documentation.
+- [x] Add HTTP API and OpenAPI documentation.
 - [ ] Add integration tests with PostgreSQL.
 
 ## License

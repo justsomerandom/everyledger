@@ -2,6 +2,7 @@ package com.everyledger.account.application;
 
 import com.everyledger.account.Account;
 import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 public interface AccountRepository {
@@ -10,4 +11,5 @@ public interface AccountRepository {
 
   /** Inserts a new account; an existing identifier must not be overwritten. */
   void save(Account account);
+  default List<Account> findAll() { return List.of(); }
 }

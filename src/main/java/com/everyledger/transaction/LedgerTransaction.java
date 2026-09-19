@@ -6,17 +6,24 @@ import com.everyledger.ledger.LedgerEntry;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 public record LedgerTransaction(
-    UUID id, Instant timestamp, TransactionStatus status, List<LedgerEntry> entries) {
+    UUID id, Instant timestamp, TransactionStatus status, String externalReference,
+    Map<String, Object> metadata, List<LedgerEntry> entries) {
+
+  public LedgerTransaction(UUID id, Instant timestamp, TransactionStatus status, List<LedgerEntry> entries) {
+    this(id, timestamp, status, null, Map.of(), entries);
+  }
 
   public LedgerTransaction {
     Objects.requireNonNull(id, "Ledger transaction id must not be null");
     Objects.requireNonNull(timestamp, "Ledger transaction timestamp must not be null");
     Objects.requireNonNull(status, "Ledger transaction status must not be null");
     Objects.requireNonNull(entries, "Ledger transaction entries must not be null");
+    metadata = metadata == null ? Map.of() : Map.copyOf(metadata);
 
     entries = List.copyOf(entries);
     if (entries.size() < 2) {

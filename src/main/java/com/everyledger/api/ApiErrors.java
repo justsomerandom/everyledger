@@ -1,0 +1,3 @@
+package com.everyledger.api;
+import com.everyledger.transaction.application.IdempotentPostingService.IdempotencyConflictException; import java.util.*; import org.springframework.http.*; import org.springframework.web.bind.annotation.*;
+@RestControllerAdvice class ApiErrors { @ExceptionHandler(IdempotencyConflictException.class) @ResponseStatus(HttpStatus.CONFLICT) Map<String,String> conflict(Exception e){return Map.of("code","idempotency_conflict","message",e.getMessage());} @ExceptionHandler({IllegalArgumentException.class,NoSuchElementException.class}) @ResponseStatus(HttpStatus.BAD_REQUEST) Map<String,String> bad(Exception e){return Map.of("code","validation_error","message",e.getMessage());} }

@@ -33,6 +33,12 @@ public final class LedgerTransactionService {
   }
 
   public LedgerTransaction post(UUID expectedAssetTypeId, List<LedgerEntry> entries) {
+    return post(expectedAssetTypeId, entries, null, java.util.Map.of());
+  }
+
+  public LedgerTransaction post(
+      UUID expectedAssetTypeId, List<LedgerEntry> entries, String externalReference,
+      java.util.Map<String, Object> metadata) {
     Objects.requireNonNull(expectedAssetTypeId, "Expected asset type id must not be null");
     List<LedgerEntry> requestedEntries = List.copyOf(entries);
     assetTypes.findById(expectedAssetTypeId)
@@ -51,7 +57,8 @@ public final class LedgerTransactionService {
     }
 
     LedgerTransaction transaction = new LedgerTransaction(
-        UUID.randomUUID(), clock.instant(), TransactionStatus.RECORDED, resolvedEntries);
+        UUID.randomUUID(), clock.instant(), TransactionStatus.RECORDED, externalReference, metadata,
+        resolvedEntries);
     transactions.save(transaction);
     return transaction;
   }

@@ -1,5 +1,5 @@
 # EveryLedger
-
+test
 EveryLedger is planned as a generic embeddable and integratable double-entry ledger service for tracking arbitrary user-defined assets or units, such as fiat currencies, loyalty points, game currencies, compute credits, inventory units, tokens, or domain-specific units.
 
 This repository contains a Java 21 Spring Boot foundation, an immutable domain model, and plain Java application services for registering assets, creating accounts, posting transactions, reading account entries, and deriving balances. Persistence adapters and HTTP APIs are not implemented yet.

@@ -18,5 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
   @Bean AssetTypeService assetTypeService(AssetTypeRepository r){return new AssetTypeService(r);}
   @Bean AccountService accountService(AccountRepository a,AssetTypeRepository t,LedgerTransactionRepository r){return new AccountService(a,t,r);}
   @Bean LedgerTransactionService transactionService(AssetTypeRepository a,AccountRepository c,LedgerTransactionRepository r,Clock k){return new LedgerTransactionService(a,c,r,k);}
-  @Bean IdempotentPostingService postingService(LedgerTransactionService s,LedgerTransactionRepository r,IdempotencyRepository i){return new IdempotentPostingService(s,r,i);}
+  @Bean IdempotencyRequestFingerprint idempotencyRequestFingerprint(ObjectMapper objectMapper) { return new IdempotencyRequestFingerprint(objectMapper); }
+  @Bean IdempotentPostingService postingService(LedgerTransactionService s,LedgerTransactionRepository r,IdempotencyRepository i,IdempotencyRequestFingerprint f){return new IdempotentPostingService(s,r,i,f);}
 }

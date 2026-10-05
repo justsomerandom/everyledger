@@ -18,15 +18,15 @@ import java.util.Map;
 import java.util.UUID;
 
 /** Produces a stable fingerprint for the complete client-visible posting request. */
-final class IdempotencyRequestFingerprint {
+public final class IdempotencyRequestFingerprint {
 
   private final ObjectMapper json;
 
-  IdempotencyRequestFingerprint(ObjectMapper json) {
+  public IdempotencyRequestFingerprint(ObjectMapper json) {
     this.json = json;
   }
 
-  String fingerprint(
+  public String fingerprint(
       UUID assetTypeId,
       List<LedgerEntry> entries,
       String externalReference,

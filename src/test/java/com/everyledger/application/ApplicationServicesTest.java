@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.everyledger.account.Account;
 import com.everyledger.account.application.AccountNotFoundException;
+import com.everyledger.account.application.AccountBalanceRepository;
 import com.everyledger.account.application.AccountRepository;
 import com.everyledger.account.application.AccountService;
 import com.everyledger.asset.AssetType;
@@ -167,6 +168,18 @@ class ApplicationServicesTest {
     post(second, first, "0.000000001");
 
     assertBalance("12345678901234567890.123456788", first);
+  }
+
+  @Test
+  void readsBalanceFromTheConfiguredDerivedBalanceReadModel() {
+    AccountBalanceRepository projectedBalances = accountId -> {
+      assertEquals(first.id(), accountId);
+      return new BigDecimal("42.125");
+    };
+    AccountService projectedService = new AccountService(
+        accounts, assets, transactions, projectedBalances);
+
+    assertEquals(0, new BigDecimal("42.125").compareTo(projectedService.balance(first.id())));
   }
 
   @Test

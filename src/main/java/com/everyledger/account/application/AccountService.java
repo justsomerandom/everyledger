@@ -16,14 +16,25 @@ public final class AccountService {
   private final AccountRepository accounts;
   private final AssetTypeRepository assetTypes;
   private final LedgerTransactionRepository transactions;
+  private final AccountBalanceRepository balances;
 
   public AccountService(
       AccountRepository accounts,
       AssetTypeRepository assetTypes,
       LedgerTransactionRepository transactions) {
+    this(accounts, assetTypes, transactions,
+        accountId -> deriveBalance(transactions.findEntriesByAccountId(accountId)));
+  }
+
+  public AccountService(
+      AccountRepository accounts,
+      AssetTypeRepository assetTypes,
+      LedgerTransactionRepository transactions,
+      AccountBalanceRepository balances) {
     this.accounts = Objects.requireNonNull(accounts);
     this.assetTypes = Objects.requireNonNull(assetTypes);
     this.transactions = Objects.requireNonNull(transactions);
+    this.balances = Objects.requireNonNull(balances);
   }
 
   public Account create(String name, UUID assetTypeId) {
@@ -43,8 +54,14 @@ public final class AccountService {
 
   /** Returns total debits minus total credits without rounding. */
   public BigDecimal balance(UUID accountId) {
+    Objects.requireNonNull(accountId, "Account id must not be null");
+    accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+    return balances.findBalance(accountId);
+  }
+
+  private static BigDecimal deriveBalance(List<LedgerEntry> entries) {
     BigDecimal balance = BigDecimal.ZERO;
-    for (LedgerEntry entry : history(accountId)) {
+    for (LedgerEntry entry : entries) {
       balance = switch (entry.direction()) {
         case DEBIT -> balance.add(entry.amount());
         case CREDIT -> balance.subtract(entry.amount());
